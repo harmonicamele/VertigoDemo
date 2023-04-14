@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UIItemAtlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 9d3c9fe36a4aa4ad981834e7e19ee0e8, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: af51f6105c49b46b680a70a9291f4897, type: 3}
+  - {fileID: 21300000, guid: a871d260eafb14400a315abeaeeeb166, type: 3}
+  - {fileID: 21300000, guid: 894763613ee6a4927a663e3ef4f76150, type: 3}
+  - {fileID: 21300000, guid: 5b5e27714856c43018efc0ab18a28458, type: 3}
+  - {fileID: 21300000, guid: ca41f955ffe6a4212a07c3174f7059ad, type: 3}
+  - {fileID: 21300000, guid: 8a1c656540cf84fa9a983f529da5d7f3, type: 3}
+  - {fileID: 21300000, guid: bbcdb00abe5cc4a48b3180741558a90b, type: 3}
+  - {fileID: 21300000, guid: 870aad3bd062a421aa2131d9a95b23eb, type: 3}
+  - {fileID: 21300000, guid: bc9448bbbf19e478ba2d703b691a36a3, type: 3}
+  - {fileID: 21300000, guid: f1161e0f16d8841bd8e357e11393c9fd, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - ui_icon_render_cons_healthshot_2
+  - ui_icon_render_cons_healthshot_2_adrenaline
+  - UI_icon_gold_pile
+  - ui_icon_render_cons_grenade_electric
+  - ui_icon_render_cons_grenade_m67
+  - UI_icon_cash
+  - ui_icon_render_cons_grenade_snowball
+  - ui_icon_render_cons_medkit_easter
+  - ui_icon_render_t_cons_grenade_emp
+  - ui_icon_render_t_cons_c4
+  m_RenderDataMap: {}
+  m_Tag: UIItemAtlas
+  m_IsVariant: 0
