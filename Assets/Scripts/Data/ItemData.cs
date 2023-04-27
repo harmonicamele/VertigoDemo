@@ -10,25 +10,26 @@ public class ItemData : ScriptableObject
     [SerializeField] UIItemsType item_icon_type;
     [SerializeField] private int item_amount_value;  
     [SerializeField] private bool item_isBomb_value;
-  
 
-   
-    public Sprite Item_icon_value { get => item_sprite_data.GetSprite(item_icon_type);  }
+    private const int addindex = 13;
     public int Item_amount_value { get => item_amount_value; }
     public int Item_id_value { get => item_id_value; }
     public bool Item_isBomb_value { get => item_isBomb_value;}
+    public int Item_sprite_index {
+        get => (int)item_icon_type + addindex;
+    }
 }
 public enum UIItemsType
 {
-    Money,
-    Gold,
-    Electric,
-    M67,
-    Snowball,
-    HealthShot2,
-    Adrenaline,
-    Easter,
-    C4,
-    Emp
+    Money = 0,
+    Gold = 1,
+    Electric = 2,
+    M67 = 3,
+    Snowball = 4,
+    HealthShot2 = 5,
+    Adrenaline = 6,
+    Easter = 7,
+    C4 = 8,
+    Emp = 9
 
 }

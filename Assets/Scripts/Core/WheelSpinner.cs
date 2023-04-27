@@ -10,17 +10,14 @@ using UnityEngine.UI;
 
 public class WheelSpinner : MonoBehaviour
 {
-   
-   [SerializeField] private Transform wheelToRotate;
-   
+    private const float ratioForSquare = 12f;
+    private const float ratioForRectangle = 6.5f;
+    private const int circleAngle = 360;
+    private const int zoneSilverIndex = 5;
+    private const int zoneGoldenIndex = 30;
+
+    [SerializeField] private Transform wheelToRotate;
     public List<ItemPointer> ItemPoint = new List<ItemPointer>();
-
-  
-
-  
-  
-
-    
 
     public Button SpinButton;
     [Header("Image")]
@@ -39,7 +36,6 @@ public class WheelSpinner : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private WheelSpinnerData SpinnerData;
-     private SpriteData SpriteData=>SpriteManager.Instance.GetSpriteData(UiSpriteType.Spinner);
     private ItemData SelectedItem;
     private List<ItemData> Itemlist = new List<ItemData>();
 
@@ -70,28 +66,28 @@ public class WheelSpinner : MonoBehaviour
     {
         eventBus = EventBus.Instance;
         spinning = false;   
-        anglePerReward = 360 / numberofSlice;
+        anglePerReward = circleAngle / numberofSlice;
         turndirection = SpinnerData.TimedTurn ? -1 : 1;
-        ui_image_spin_Button.sprite = SpriteData.GetSprite(UISpinner.SpinBtn);
-        ui_image_spin_CurrentBg.sprite = SpriteData.GetSprite(UISpinner.CurrentBg);
+        ui_image_spin_Button.sprite = SpriteManager.Instance.GetSprite(5);
+        ui_image_spin_CurrentBg.sprite = SpriteManager.Instance.GetSprite(6);
         SpinButton.onClick.AddListener(OnclickSpin);
         SilveSpin();
         
         ItemGenerate();
     }
-    
+   
 
     private void SpinType(GameEvents.ZoneType zoneType)
     {
         var zoneIndex = zoneType.ZoneIndex;
-        if (zoneIndex % 5 == 0 || zoneIndex == 1)
+        if (zoneIndex % zoneSilverIndex == 0 || zoneIndex == 1)
         {
-            if (zoneIndex%30==0)
+            if (zoneIndex%zoneGoldenIndex==0)
             {
                 Itemlist = SpinnerData.ItemDatalist(2);
                 ItemGenerate();
-                ui_image_Spinner.sprite = SpriteData.GetSprite(UISpinner.GoldSpin);
-                ui_image_Indicator.sprite = SpriteData.GetSprite(UISpinner.GoldIndicator);
+                ui_image_Spinner.sprite = SpriteManager.Instance.GetSprite(7);
+                ui_image_Indicator.sprite = SpriteManager.Instance.GetSprite(8);
                 SpinText.text = "GOLDEN SPIN";
                 SpinText.color = Color.yellow;
 
@@ -106,8 +102,8 @@ public class WheelSpinner : MonoBehaviour
         {
             Itemlist = SpinnerData.ItemDatalist(0);
             ItemGenerate();
-            ui_image_Spinner.sprite = SpriteData.GetSprite(UISpinner.BronzSpin);
-            ui_image_Indicator.sprite = SpriteData.GetSprite(UISpinner.BronzIndicator);
+            ui_image_Spinner.sprite = SpriteManager.Instance.GetSprite(9);
+            ui_image_Indicator.sprite = SpriteManager.Instance.GetSprite(10);
             SpinText.text = "NORMAL SPIN";
             SpinText.color = Color.white;
         }
@@ -118,8 +114,8 @@ public class WheelSpinner : MonoBehaviour
     {
         Itemlist = SpinnerData.ItemDatalist(1);
         ItemGenerate();
-        ui_image_Spinner.sprite = SpriteData.GetSprite(UISpinner.SilverSpin);
-        ui_image_Indicator.sprite = SpriteData.GetSprite(UISpinner.SilverIndicator);
+        ui_image_Spinner.sprite = SpriteManager.Instance.GetSprite(11);
+        ui_image_Indicator.sprite = SpriteManager.Instance.GetSprite(12);
         SpinText.text = "SILVER SPIN";
         SpinText.color = Color.gray;
     }
@@ -128,7 +124,7 @@ public class WheelSpinner : MonoBehaviour
     {
         for (int i = 0; i < numberofSlice; i++)
         {
-            ItemPoint[i].ui_item_Icon.sprite = Itemlist[i].Item_icon_value;
+            ItemPoint[i].ui_item_Icon.sprite = SpriteManager.Instance.GetSprite(Itemlist[i].Item_sprite_index ); 
             ItemScaleNativeSize(i);  
             if (!Itemlist[i].Item_isBomb_value)
             {
@@ -160,69 +156,69 @@ public class WheelSpinner : MonoBehaviour
         {
             targetToStopOn = UnityEngine.Random.Range(0, numberofSlice);
             
-            float maxAngle =  360 * SpinnerData.SpeedMultiplier + (targetToStopOn * anglePerReward);
+            float maxAngle =  circleAngle * SpinnerData.SpeedMultiplier + (targetToStopOn * anglePerReward);
 
             spinning = true;
             SpinButton.gameObject.SetActive(false);
           
             wheelToRotate.DORotate(new Vector3(0,0,maxAngle) * turndirection, SpinnerData.Duration, RotateMode.LocalAxisAdd).SetEase(SpinnerData.animationCurve).
                 OnUpdate(() => {
-                    float angle = wheelToRotate.eulerAngles.z;
-                    var index = (int)(CurrentTarget(angle));
-                   
-                    ui_image_CurrentItem.sprite = Itemlist[index].Item_icon_value;
-                    if (!Itemlist[index].Item_isBomb_value)
-                    {
-                        CurrentValue.text = "X" + Itemlist[index].Item_amount_value.ToString();
-                    }
-                    else
-                    {
-                        CurrentValue.text = null;
-                    }
-                    
-                }).
-                    OnComplete(() =>
-                    {
 
-                        
-                        indexs = CurrentTarget(wheelToRotate.eulerAngles.z+10);
-                 
-                        SelectedItem = Itemlist[indexs];
-                        ui_image_CurrentItem.sprite = SelectedItem.Item_icon_value;
-                        if (!SelectedItem.Item_isBomb_value)
-                        {
-                            CurrentValue.text = "X" + SelectedItem.Item_amount_value.ToString();
-                        }
-                        else
-                        {
-                            CurrentValue.text = "Bomb";
-                        }
-                      
+                    OnUpdateSpin();
+                }).OnComplete(() =>{ OnCompletedSpin();}
+                ); ;
 
 
-                        spinning = false;
-                       
-                        if (!Itemlist[indexs].Item_isBomb_value)
-                        {
-                            eventBus.Fire(new GameEvents.Selected(SelectedItem));                  
-                        }
-                        else
-                        {
-                            Debug.Log("Bomb");
-                            eventBus.Fire(new GameEvents.Bomb());
-                            Invoke(nameof(ReadySpin), 1);
 
-                        }
-                       
-                     
-                    }
-                    );;
-
-           
         }
     }
 
+    private void OnUpdateSpin()
+    {
+        float angle = wheelToRotate.eulerAngles.z;
+        var index = (int)(CurrentTarget(angle));
+        ui_image_CurrentItem.sprite = SpriteManager.Instance.GetSprite(Itemlist[index].Item_sprite_index);
+        if (!Itemlist[index].Item_isBomb_value)
+        {
+            CurrentValue.text = "X" + Itemlist[index].Item_amount_value.ToString();
+        }
+        else
+        {
+            CurrentValue.text = null;
+        }
+    }
 
+    private void OnCompletedSpin()
+    {
+        indexs = CurrentTarget(wheelToRotate.eulerAngles.z + 10);
+
+        SelectedItem = Itemlist[indexs];
+        ui_image_CurrentItem.sprite = SpriteManager.Instance.GetSprite(SelectedItem.Item_sprite_index);
+
+        if (!SelectedItem.Item_isBomb_value)
+        {
+            CurrentValue.text = "X" + SelectedItem.Item_amount_value.ToString();
+        }
+        else
+        {
+            CurrentValue.text = "Bomb";
+        }
+
+
+
+        spinning = false;
+
+        if (!Itemlist[indexs].Item_isBomb_value)
+        {
+            eventBus.Fire(new GameEvents.Selected(SelectedItem));
+        }
+        else
+        {
+            eventBus.Fire(new GameEvents.Bomb());
+            Invoke(nameof(ReadySpin), 1);
+
+        }
+    }
  
 
    private void ReadySpin()
@@ -233,25 +229,23 @@ public class WheelSpinner : MonoBehaviour
 
     int selectedindex;
     private int CurrentTarget(float angle)
-    {
-        
-       int index = (int)(angle / (anglePerReward));
-        Debug.Log(index);
-       
+    {      
+       int index = (int)(angle / (anglePerReward));       
         return index;
     }
 
+    
     private void ItemScaleNativeSize(Index i)
     {
         ItemPoint[i].ui_item_Icon.SetNativeSize();
         
         if (ItemPoint[i].item_Icon_rectTransform.sizeDelta.x == ItemPoint[i].item_Icon_rectTransform.sizeDelta.y)
         {
-            ItemPoint[i].item_Icon_rectTransform.sizeDelta = ItemPoint[i].item_Icon_rectTransform.sizeDelta / 12f;
+            ItemPoint[i].item_Icon_rectTransform.sizeDelta = ItemPoint[i].item_Icon_rectTransform.sizeDelta / ratioForSquare;
         }
         else
         {
-            ItemPoint[i].item_Icon_rectTransform.sizeDelta = ItemPoint[i].item_Icon_rectTransform.sizeDelta / 6.5f;
+            ItemPoint[i].item_Icon_rectTransform.sizeDelta = ItemPoint[i].item_Icon_rectTransform.sizeDelta / ratioForRectangle;
         }
     }
 

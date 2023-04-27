@@ -7,24 +7,16 @@ using UnityEngine.UI;
 public class Prize : MonoBehaviour
 {
     public Image PrizeImage;
-    public int itemvalue;
+    public int Itemvalue;
     public TextMeshProUGUI Text;
     public ItemData ItemData;
 
     public void Setvalue(int value)
     {
       
-        itemvalue = itemvalue + value; 
-        Text.text = itemvalue.ToString();
+        Itemvalue = Itemvalue + value; 
+        Text.text = Itemvalue.ToString();
     
 
-    }
-    //public Prize(Sprite icon,int _itemvalue,ItemData _itemData)
-    //{
-    //    itemvalue = _itemvalue;
-    //    ItemData = _itemData;
-    //    PrizeImage.sprite = icon;
-    //    Text.text = _itemData.ToString();
-    //}
-    
+    }   
 }

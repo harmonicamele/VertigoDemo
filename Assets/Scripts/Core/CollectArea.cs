@@ -22,7 +22,7 @@ public class CollectArea : MonoBehaviour
 
     Prize obj;
     private EventBus eventBus;
-    private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
+   // private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
     private void Awake()
     {
         SetImage();
@@ -31,9 +31,9 @@ public class CollectArea : MonoBehaviour
     private void SetImage()
     {
         eventBus = EventBus.Instance;
-        ui_image_collect_frame.sprite = SpriteData.GetSprite(UIOthers.UIFrame);
-        ui_image_Exit_Button_frame.sprite = SpriteData.GetSprite(UIOthers.UIFrame);
-        ui_image_Exit_Button.sprite = SpriteData.GetSprite(UIOthers.UIcardZonelWhite);
+        ui_image_collect_frame.sprite = SpriteManager.Instance.GetSprite(2);
+        ui_image_Exit_Button_frame.sprite = SpriteManager.Instance.GetSprite(2);
+        ui_image_Exit_Button.sprite = SpriteManager.Instance.GetSprite(4);
     }
     private void OnEnable()
     {
@@ -56,8 +56,8 @@ public class CollectArea : MonoBehaviour
         {
             obj = Instantiate(Prize, this.transform);
             obj.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, itemDataId.Count * -40f);
-            obj.PrizeImage.sprite = data.Item_icon_value;
-            obj.itemvalue = data.Item_amount_value;
+            obj.PrizeImage.sprite = SpriteManager.Instance.GetSprite(data.Item_sprite_index);
+            obj.Itemvalue = data.Item_amount_value;
             obj.Text.text = data.Item_amount_value.ToString();
             obj.ItemData = data;
             itemDataId.Add(data.Item_id_value);

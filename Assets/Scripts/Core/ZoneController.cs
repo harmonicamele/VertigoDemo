@@ -27,7 +27,7 @@ public class ZoneController : MonoBehaviour
     [SerializeField] private Image ui_image_currentzone;
 
     [SerializeField] private Image ui_image_Exit_Button_frame;
-    private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
+ //   private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
     private EventBus eventBus;
     private void Awake()
     {
@@ -43,9 +43,9 @@ public class ZoneController : MonoBehaviour
     }
     private void SetImage()
     {
-        ui_image_zone_Bg.sprite = SpriteData.GetSprite(UIOthers.UIcardZoneBg);
-        ui_image_zone_frame.sprite = SpriteData.GetSprite(UIOthers.UIFrame);
-        ui_image_currentzone.sprite = SpriteData.GetSprite(UIOthers.UIcardZoneSuper);
+        ui_image_zone_Bg.sprite = SpriteManager.Instance.GetSprite(1);
+        ui_image_zone_frame.sprite = SpriteManager.Instance.GetSprite(2);
+        ui_image_currentzone.sprite = SpriteManager.Instance.GetSprite(3);
     }
     private void OnEnable()
     {
@@ -100,7 +100,7 @@ public class ZoneController : MonoBehaviour
         }
         else
         {
-            ui_image_currentzone.sprite = SpriteData.GetSprite(UIOthers.UIcardZonelWhite);
+            ui_image_currentzone.sprite = SpriteManager.Instance.GetSprite(4);
         }
         eventBus.Fire(new GameEvents.ZoneType(zoneIndex));
     }
@@ -132,7 +132,7 @@ public class ZoneController : MonoBehaviour
     }
     private void SafeZoneView()
     {
-        ui_image_currentzone.sprite = SpriteData.GetSprite(UIOthers.UIcardZoneSuper);
+        ui_image_currentzone.sprite =SpriteManager.Instance.GetSprite(3);
         NextSafeZone.text = (5 * safezoneIndex).ToString();
     }
     

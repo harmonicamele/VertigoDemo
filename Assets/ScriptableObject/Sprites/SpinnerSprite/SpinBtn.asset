@@ -10,19 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10c19a9e3b5d04864baad7130e61fb32, type: 3}
-  m_Name: UIspinner
+  m_Name: SpinBtn
   m_EditorClassIdentifier: 
-  SpritesGroupName: SpinnerUI
-  SpriteNames:
-  - UI_silver_spin_button
-  - UI_golden_spin_button
-  - UI_button_blue_standard
-  - UI_button_green_standard
-  - UI_button_orange_standard
-  - UI_spin_bronze_base
-  - UI_spin_bronze_indicator
-  - UI_spin_silver_base
-  - UI_spin_silver_indicator
-  - UI_spin_golden_base
-  - UI_spin_golden_indicator
+  SpriteId: 5
+  sprite: {fileID: 21300000, guid: ae5ee4ddea9b0436eb3bdd39529c0834, type: 3}
   spriteAtlas: {fileID: 4343727234628468602, guid: bb569c66800c44b558d41635efe6e9ae, type: 2}

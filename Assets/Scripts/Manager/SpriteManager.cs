@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.SingeltonSystem;
@@ -7,41 +8,33 @@ using UnityEngine;
 
 public class SpriteManager : MonoSingleton<SpriteManager>
 {
-    
-    [SerializeField] SpriteData ui_sprite_SpinnerData;
-    [SerializeField] SpriteData ui_sprite_ItemData;
-    [SerializeField] SpriteData ui_sprite_OtherData;
-    
-    
-    // Start is called before the first frame update
-    void Awake()
+    public List<SpriteData> SpriteDataList = new List<SpriteData>();
+    private Dictionary<int, SpriteData> dictionarylist = new Dictionary<int, SpriteData>(); 
+    private Sprite sprite;
+
+    public void Initialize()
     {
-       
-    }
-  
-  public  SpriteData GetSpriteData(UiSpriteType type )
-    {
-        SpriteData spriteData = null;
-        switch (type)
+        foreach (var item in SpriteDataList)
         {
-            case UiSpriteType.Spinner:
-                spriteData = ui_sprite_SpinnerData;
-                break;
-            case UiSpriteType.Item:
-                spriteData = ui_sprite_ItemData;
-                break;
-            case UiSpriteType.Other:
-                spriteData = ui_sprite_OtherData;
-                break;
-
+            dictionarylist.Add(item.SpriteId, item);
         }
-      
-        return spriteData;
     }
-}
-public enum UiSpriteType{
-    Spinner,
-    Item,
-    Other,
+    public Sprite GetSprite(int id)
+    {
+
+        if (dictionarylist.ContainsKey(id))
+        {
+            sprite = dictionarylist[id].GetSprite();
+        }
+        else
+        {
+            sprite = null;
+            //throw new Exception("Sprite Id is wrong or null! Please check it from  " + typeof(SpriteData));
+        }
+
+
+        return sprite;
+    }
 
 }
+

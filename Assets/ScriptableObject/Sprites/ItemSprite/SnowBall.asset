@@ -10,18 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 10c19a9e3b5d04864baad7130e61fb32, type: 3}
-  m_Name: UIitems
+  m_Name: SnowBall
   m_EditorClassIdentifier: 
-  SpritesGroupName: ItemUI
-  SpriteNames:
-  - UI_icon_cash
-  - UI_icon_gold_pile
-  - ui_icon_render_cons_grenade_electric
-  - ui_icon_render_cons_grenade_m67
-  - ui_icon_render_cons_grenade_snowball
-  - ui_icon_render_cons_healthshot_2
-  - ui_icon_render_cons_healthshot_2_adrenaline
-  - ui_icon_render_cons_medkit_easter
-  - ui_icon_render_t_cons_c4
-  - ui_icon_render_t_cons_grenade_emp
+  SpriteId: 17
+  sprite: {fileID: 21300000, guid: bbcdb00abe5cc4a48b3180741558a90b, type: 3}
   spriteAtlas: {fileID: 4343727234628468602, guid: 6472305dbcd334b3e98797256e88ae6d, type: 2}
