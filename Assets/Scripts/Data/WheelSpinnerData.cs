@@ -8,13 +8,13 @@ public class WheelSpinnerData : ScriptableObject
     [SerializeField] private List<ItemData> SafeItemList = new List<ItemData>();
     [SerializeField] private List<ItemData> SuperItemList = new List<ItemData>();
 
-   
 
+    public int NumberOfSlice;
     [Range(1, 5)]
-    public int speedMultiplier;
+    public int SpeedMultiplier;
     [Range(2, 10)]
-    public int duration;
-    public bool timedTurn;
+    public int Duration;
+    public bool TimedTurn;
     public AnimationCurve animationCurve;
 
     public List<ItemData> ItemDatalist(int index)

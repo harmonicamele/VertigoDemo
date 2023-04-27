@@ -43,7 +43,7 @@ public class WheelSpinner : MonoBehaviour
     private ItemData SelectedItem;
     private List<ItemData> Itemlist = new List<ItemData>();
 
-
+    private int numberofSlice => SpinnerData.NumberOfSlice;
 
     private float anglePerReward;  
     private int targetToStopOn;
@@ -69,8 +69,8 @@ public class WheelSpinner : MonoBehaviour
     private void Awake()
     {
         spinning = false;   
-        anglePerReward = 360 / 8;
-        turndirection = SpinnerData.timedTurn ? -1 : 1;
+        anglePerReward = 360 / numberofSlice;
+        turndirection = SpinnerData.TimedTurn ? -1 : 1;
         ui_image_spin_Button.sprite = SpriteData.GetSprite(UISpinner.SpinBtn);
         ui_image_spin_CurrentBg.sprite = SpriteData.GetSprite(UISpinner.CurrentBg);
         SpinButton.onClick.AddListener(OnclickSpin);
@@ -120,7 +120,7 @@ public class WheelSpinner : MonoBehaviour
   
     private void ItemGenerate()
     {
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < numberofSlice; i++)
         {
             ItemPoint[i].ui_item_Icon.sprite = Itemlist[i].Item_icon_value;
             ItemScaleNativeSize(i);  
@@ -152,14 +152,14 @@ public class WheelSpinner : MonoBehaviour
     {
         if (!spinning)
         {
-            targetToStopOn = UnityEngine.Random.Range(0, 8);
+            targetToStopOn = UnityEngine.Random.Range(0, numberofSlice);
             
-            float maxAngle =  360 * SpinnerData.speedMultiplier + (targetToStopOn * anglePerReward);
+            float maxAngle =  360 * SpinnerData.SpeedMultiplier + (targetToStopOn * anglePerReward);
 
             spinning = true;
             SpinButton.gameObject.SetActive(false);
           
-            wheelToRotate.DORotate(new Vector3(0,0,maxAngle) * turndirection, SpinnerData.duration, RotateMode.LocalAxisAdd).SetEase(SpinnerData.animationCurve).
+            wheelToRotate.DORotate(new Vector3(0,0,maxAngle) * turndirection, SpinnerData.Duration, RotateMode.LocalAxisAdd).SetEase(SpinnerData.animationCurve).
                 OnUpdate(() => {
                     float angle = wheelToRotate.eulerAngles.z;
                     var index = (int)(CurrentTarget(angle));
@@ -230,18 +230,11 @@ public class WheelSpinner : MonoBehaviour
     int selectedindex;
     private int CurrentTarget(float angle)
     {
-        float index = angle switch
-        {
-            float n when n>= 0 && n <45 => 0,
-            float n when n >= 45 && n < 90 => 1,
-            float n when n >= 90 && n < 135 => 2,
-            float n when n >= 135 && n < 180 => 3,
-            float n when n >= 180 && n < 225 => 4,
-            float n when n >= 225 && n < 270 => 5,
-            float n when n >= 270 && n < 315 => 6,
-            _ => 7
-        };
-        return (int)index;
+        
+       int index = (int)(angle / (anglePerReward));
+        Debug.Log(index);
+       
+        return index;
     }
 
     private void ItemScaleNativeSize(Index i)

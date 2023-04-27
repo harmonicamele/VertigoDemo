@@ -39,9 +39,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c80a1687fc60e40da8d03d32b3c4940d, type: 2}
   - {fileID: 11400000, guid: 84f6df38a5c4b408fab622be547bde3d, type: 2}
   - {fileID: 11400000, guid: d65af7203776e408ba4b132df836a374, type: 2}
-  speedMultiplier: 4
-  duration: 5
-  timedTurn: 1
+  NumberOfSlice: 8
+  SpeedMultiplier: 2
+  Duration: 3
+  TimedTurn: 0
   animationCurve:
     serializedVersion: 2
     m_Curve:
