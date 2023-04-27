@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
-namespace Game.Sprites
+namespace Game.Data
 {
     [CreateAssetMenu]
     public class SpriteData : SpriteDataBase
@@ -21,42 +21,6 @@ namespace Game.Sprites
         }
 
     }
-
-
-
-    public enum UISpinner
-    {
-        SpinBtn,
-        CurrentBg,
-        BlueBtn,
-        GreenBtn,
-        OrangeBtn,
-        BronzSpin,
-        BronzIndicator,
-        SilverSpin,
-        SilverIndicator,
-        GoldSpin,
-        GoldIndicator
-
-    }
-
-   
-
-    public enum UIOthers
-    {
-        UIFrame,
-        UIcardZonelWhite,
-        UIcardZoneBg,
-        UIcardZoneSuper
-    }
-
-   
-
-    public enum UIDeath
-    {
-        
-    }
-
 }
 
 

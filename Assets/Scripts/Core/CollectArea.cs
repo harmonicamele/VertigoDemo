@@ -1,104 +1,102 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using Game.EventSystem;
-using Game.Sprites;
-using TMPro;
+using Game.Manager;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class CollectArea : MonoBehaviour
+namespace Game.Core
 {
-    
-    [Header(nameof(Image))]
-    [SerializeField] private Image ui_image_collect_frame;
-    [SerializeField] private Image ui_image_Exit_Button;
-    [SerializeField] private Image ui_image_Exit_Button_frame;
+    public class CollectArea : MonoBehaviour
+    {
+        public Prize Prize;
+        [Header(nameof(Image))]
+        [SerializeField] private Image ui_image_collect_frame;
+        [SerializeField] private Image ui_image_Exit_Button;
+        [SerializeField] private Image ui_image_Exit_Button_frame;
+        
 
-    
-    public Prize Prize;
-    private List<int> itemDataId = new List<int>();
-    private List<Prize> Prizelist = new List<Prize>();
+        private List<int> itemDataId = new List<int>();
+        private List<Prize> prizeList = new List<Prize>();
+        private Prize obj;
+        private EventBus eventBus;
+        private const float prizeYDistance = -40f;
 
-    Prize obj;
-    private EventBus eventBus;
-   // private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
-    private void Awake()
-    {
-        SetImage();
-    }
-   
-    private void SetImage()
-    {
-        eventBus = EventBus.Instance;
-        ui_image_collect_frame.sprite = SpriteManager.Instance.GetSprite(2);
-        ui_image_Exit_Button_frame.sprite = SpriteManager.Instance.GetSprite(2);
-        ui_image_Exit_Button.sprite = SpriteManager.Instance.GetSprite(4);
-    }
-    private void OnEnable()
-    {
-        eventBus.Subscribe<GameEvents.GiveUp>(Reset);
-        eventBus.Subscribe<GameEvents.Selected>(Selected);
+        private void Awake()
+        {
+            SetImage();
+        }
+
        
-    }
-    private void OnDisable()
-    {
-        eventBus.Unsubscribe<GameEvents.GiveUp>(Reset);
-        eventBus.Unsubscribe<GameEvents.Selected>(Selected);
-    }
+        private void OnEnable()
+        {
+            eventBus.Subscribe<GameEvents.GiveUp>(Reset);
+            eventBus.Subscribe<GameEvents.Selected>(Selected);
 
-   
+        }
+        private void OnDisable()
+        {
+            eventBus.Unsubscribe<GameEvents.GiveUp>(Reset);
+            eventBus.Unsubscribe<GameEvents.Selected>(Selected);
+        }
 
-    private void Selected(GameEvents.Selected selected)
-    {
-        var data = selected.ItemData;
-        if (!itemDataId.Contains(data.Item_id_value))
+        private void SetImage()
+        {
+            eventBus = EventBus.Instance;
+            ui_image_collect_frame.sprite = SpriteManager.Instance.GetSprite(2);
+            ui_image_Exit_Button_frame.sprite = SpriteManager.Instance.GetSprite(2);
+            ui_image_Exit_Button.sprite = SpriteManager.Instance.GetSprite(4);
+        }
+
+        private void Selected(GameEvents.Selected selected)
+        {
+            var data = selected.ItemData;
+            if (!itemDataId.Contains(data.Item_id_value))
+            {
+
+                AddNewPrize(data);
+            }
+            else
+            {
+
+                foreach (var item in prizeList)
+                {
+                    if (item.ItemData.Item_id_value == data.Item_id_value)
+                    {
+                        item.Setvalue(data.Item_amount_value);
+                        Invoke(nameof(Finish), 1);
+                    }
+                }
+
+            }
+        }
+
+        private void AddNewPrize(ItemData data)
         {
             obj = Instantiate(Prize, this.transform);
-            obj.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, itemDataId.Count * -40f);
+            obj.GetComponent<RectTransform>().anchoredPosition += new Vector2(0, itemDataId.Count * prizeYDistance);
             obj.PrizeImage.sprite = SpriteManager.Instance.GetSprite(data.Item_sprite_index);
             obj.Itemvalue = data.Item_amount_value;
             obj.Text.text = data.Item_amount_value.ToString();
             obj.ItemData = data;
             itemDataId.Add(data.Item_id_value);
-            Prizelist.Add(obj);
+            prizeList.Add(obj);
             Invoke(nameof(Finish), 1);
-
         }
-        else
+        private void Finish()
         {
-           
-            foreach (var item in Prizelist)
+            eventBus.Fire(new GameEvents.SpinFinish());
+            eventBus.Fire(new GameEvents.SpinReady());
+        }
+        public void Reset()
+        {
+            itemDataId.Clear();
+
+            foreach (var item in prizeList)
             {
-                if (item.ItemData.Item_id_value == data.Item_id_value)
-                {
-                    item.Setvalue(data.Item_amount_value);
-                    Invoke(nameof(Finish), 1);
-                }
+                Destroy(item.gameObject);
             }
-
-
+            prizeList.Clear();
         }
-       
-        
-
-    }
-    private void Finish()
-    {
-        eventBus.Fire(new GameEvents.SpinFinish());
-        eventBus.Fire(new GameEvents.SpinReady());
-    }
-
-
-
-    public void Reset()
-    {
-        itemDataId.Clear();
-        
-        foreach (var item in Prizelist)
-        {
-            Destroy(item.gameObject);
-        }
-        Prizelist.Clear();
     }
 }
+

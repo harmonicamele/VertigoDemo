@@ -1,22 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
-public class Prize : MonoBehaviour
+namespace Game.Core
 {
-    public Image PrizeImage;
-    public int Itemvalue;
-    public TextMeshProUGUI Text;
-    public ItemData ItemData;
-
-    public void Setvalue(int value)
+    public class Prize : MonoBehaviour
     {
-      
-        Itemvalue = Itemvalue + value; 
-        Text.text = Itemvalue.ToString();
-    
+        public Image PrizeImage;
+        public int Itemvalue;
+        public TextMeshProUGUI Text;
+        public ItemData ItemData;
 
-    }   
+        public void Setvalue(int value)
+        {
+
+            Itemvalue = Itemvalue + value;
+            Text.text = Itemvalue.ToString();
+
+
+        }
+    }
 }
+

@@ -1,40 +1,41 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using Game.Data;
 using Game.SingeltonSystem;
-using Game.Sprites;
-
 using UnityEngine;
-
-public class SpriteManager : MonoSingleton<SpriteManager>
+namespace Game.Manager
 {
-    public List<SpriteData> SpriteDataList = new List<SpriteData>();
-    private Dictionary<int, SpriteData> dictionarylist = new Dictionary<int, SpriteData>(); 
-    private Sprite sprite;
-
-    public void Initialize()
+    public class SpriteManager : MonoSingleton<SpriteManager>
     {
-        foreach (var item in SpriteDataList)
+        public List<SpriteData> SpriteDataList = new List<SpriteData>();
+        private Dictionary<int, SpriteData> dictionarylist = new Dictionary<int, SpriteData>();
+        private Sprite sprite;
+
+        public void Initialize()
         {
-            dictionarylist.Add(item.SpriteId, item);
+            foreach (var item in SpriteDataList)
+            {
+                dictionarylist.Add(item.SpriteId, item);
+            }
         }
+        public Sprite GetSprite(int id)
+        {
+
+            if (dictionarylist.ContainsKey(id))
+            {
+                sprite = dictionarylist[id].GetSprite();
+            }
+            else
+            {
+                throw new Exception("Sprite Id is wrong or null! Please check it from  " + typeof(SpriteData));
+            }
+
+
+            return sprite;
+        }
+
     }
-    public Sprite GetSprite(int id)
-    {
-
-        if (dictionarylist.ContainsKey(id))
-        {
-            sprite = dictionarylist[id].GetSprite();
-        }
-        else
-        {
-            sprite = null;
-            //throw new Exception("Sprite Id is wrong or null! Please check it from  " + typeof(SpriteData));
-        }
-
-
-        return sprite;
-    }
-
 }
+
+
 
