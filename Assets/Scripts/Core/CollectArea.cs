@@ -21,6 +21,7 @@ public class CollectArea : MonoBehaviour
     private List<Prize> Prizelist = new List<Prize>();
 
     Prize obj;
+    private EventBus eventBus;
     private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
     private void Awake()
     {
@@ -29,32 +30,28 @@ public class CollectArea : MonoBehaviour
    
     private void SetImage()
     {
+        eventBus = EventBus.Instance;
         ui_image_collect_frame.sprite = SpriteData.GetSprite(UIOthers.UIFrame);
         ui_image_Exit_Button_frame.sprite = SpriteData.GetSprite(UIOthers.UIFrame);
         ui_image_Exit_Button.sprite = SpriteData.GetSprite(UIOthers.UIcardZonelWhite);
     }
     private void OnEnable()
     {
-        EventBus.GiveUp += Reset;
-        EventBus.Selected += Selected;
+        eventBus.Subscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Subscribe<GameEvents.Selected>(Selected);
+       
     }
     private void OnDisable()
     {
-        EventBus.GiveUp -= Reset;
-        EventBus.Selected -= Selected;
+        eventBus.Unsubscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Unsubscribe<GameEvents.Selected>(Selected);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log(obj);
-            
-        }
-    }
+   
 
-    private void Selected(ItemData data)
+    private void Selected(GameEvents.Selected selected)
     {
+        var data = selected.ItemData;
         if (!itemDataId.Contains(data.Item_id_value))
         {
             obj = Instantiate(Prize, this.transform);
@@ -88,9 +85,8 @@ public class CollectArea : MonoBehaviour
     }
     private void Finish()
     {
-        EventBus.SpinFinish?.Invoke();
-        EventBus.SpinReady?.Invoke();
-
+        eventBus.Fire(new GameEvents.SpinFinish());
+        eventBus.Fire(new GameEvents.SpinReady());
     }
 
 

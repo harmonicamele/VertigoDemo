@@ -9,19 +9,23 @@ public class DeadArea : MonoBehaviour
 {
     [SerializeField] private Button Giveup, Revive;
     [SerializeField] private GameObject DeadPanel;
+
+    private EventBus eventBus;
     private void Awake()
     {
-       
+        eventBus = EventBus.Instance;
     }
     private void OnEnable()
     {
         Giveup.onClick.AddListener(GiveUpAll);
         Revive.onClick.AddListener(KeepIt);
-        EventBus.Bomb += Bomb;
+        eventBus.Subscribe<GameEvents.Bomb>(Bomb);
     }
     private void OnDisable()
     {
-        EventBus.Bomb -= Bomb;
+        Giveup.onClick.RemoveListener(GiveUpAll);
+        Revive.onClick.RemoveListener(KeepIt);
+        eventBus.Unsubscribe<GameEvents.Bomb>(Bomb);
     }
 
 
@@ -40,7 +44,7 @@ public class DeadArea : MonoBehaviour
     }
     private void GiveUpAll()
     {
-        EventBus.GiveUp?.Invoke();
+        eventBus.Fire(new GameEvents.GiveUp());
         PanelActive(false);
     }
 

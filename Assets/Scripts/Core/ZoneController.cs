@@ -28,10 +28,10 @@ public class ZoneController : MonoBehaviour
 
     [SerializeField] private Image ui_image_Exit_Button_frame;
     private SpriteData SpriteData => SpriteManager.Instance.GetSpriteData(UiSpriteType.Other);
-
+    private EventBus eventBus;
     private void Awake()
     {
-       
+        eventBus = EventBus.Instance;
        SetImage();
        
     }
@@ -49,13 +49,13 @@ public class ZoneController : MonoBehaviour
     }
     private void OnEnable()
     {
-        EventBus.GiveUp += Reset;
-        EventBus.SpinFinish += MoveZone;
+        eventBus.Subscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Subscribe<GameEvents.SpinFinish>(MoveZone);
     }
     private void OnDisable()
     {
-        EventBus.GiveUp -= Reset;
-        EventBus.SpinFinish -= MoveZone;
+        eventBus.Unsubscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Unsubscribe<GameEvents.SpinFinish>(MoveZone);
     }
 
     private void ZoneGenerate()
@@ -74,7 +74,7 @@ public class ZoneController : MonoBehaviour
             }
             ZoneTextList.Enqueue(obj);
         }
-        EventBus.ZoneType?.Invoke(zoneIndex);
+        eventBus.Fire(new GameEvents.ZoneType(zoneIndex));
         
     }
     int zoneIndex=1;
@@ -102,7 +102,7 @@ public class ZoneController : MonoBehaviour
         {
             ui_image_currentzone.sprite = SpriteData.GetSprite(UIOthers.UIcardZonelWhite);
         }
-        EventBus.ZoneType?.Invoke(zoneIndex);
+        eventBus.Fire(new GameEvents.ZoneType(zoneIndex));
     }
   
 

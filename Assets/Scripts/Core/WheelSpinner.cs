@@ -44,44 +44,46 @@ public class WheelSpinner : MonoBehaviour
     private List<ItemData> Itemlist = new List<ItemData>();
 
     private int numberofSlice => SpinnerData.NumberOfSlice;
-
+    private EventBus eventBus;
     private float anglePerReward;  
     private int targetToStopOn;
     private void OnEnable()
     {
-        EventBus.GiveUp += Reset;
-        EventBus.ZoneType += SpinType;
-        EventBus.SpinReady += ReadySpin;
+        eventBus.Subscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Subscribe<GameEvents.ZoneType>(SpinType);
+        eventBus.Subscribe<GameEvents.SpinReady>(ReadySpin);    
     }  
 
     private void OnDisable()
     {
-        EventBus.GiveUp -= Reset;
-        EventBus.ZoneType -= SpinType;
-        EventBus.SpinReady -= ReadySpin;
+        eventBus.Unsubscribe<GameEvents.GiveUp>(Reset);
+        eventBus.Unsubscribe<GameEvents.ZoneType>(SpinType);
+        eventBus.Unsubscribe<GameEvents.SpinReady>(ReadySpin);
     }
    
     private void Reset()
     {
-        SpinType(1);
+        SilveSpin();
         ItemGenerate();
     }
     private void Awake()
     {
+        eventBus = EventBus.Instance;
         spinning = false;   
         anglePerReward = 360 / numberofSlice;
         turndirection = SpinnerData.TimedTurn ? -1 : 1;
         ui_image_spin_Button.sprite = SpriteData.GetSprite(UISpinner.SpinBtn);
         ui_image_spin_CurrentBg.sprite = SpriteData.GetSprite(UISpinner.CurrentBg);
         SpinButton.onClick.AddListener(OnclickSpin);
-        SpinType(1);
+        SilveSpin();
         
         ItemGenerate();
     }
     
 
-    private void SpinType(int zoneIndex)
+    private void SpinType(GameEvents.ZoneType zoneType)
     {
+        var zoneIndex = zoneType.ZoneIndex;
         if (zoneIndex % 5 == 0 || zoneIndex == 1)
         {
             if (zoneIndex%30==0)
@@ -97,12 +99,7 @@ public class WheelSpinner : MonoBehaviour
             else
             {
 
-                Itemlist = SpinnerData.ItemDatalist(1);
-                ItemGenerate();
-                ui_image_Spinner.sprite = SpriteData.GetSprite(UISpinner.SilverSpin);
-                ui_image_Indicator.sprite = SpriteData.GetSprite(UISpinner.SilverIndicator);
-                SpinText.text = "SILVER SPIN";
-                SpinText.color = Color.gray;
+                SilveSpin();
             }
         }
         else
@@ -116,7 +113,16 @@ public class WheelSpinner : MonoBehaviour
         }
 
     }
-   
+
+   private void SilveSpin()
+    {
+        Itemlist = SpinnerData.ItemDatalist(1);
+        ItemGenerate();
+        ui_image_Spinner.sprite = SpriteData.GetSprite(UISpinner.SilverSpin);
+        ui_image_Indicator.sprite = SpriteData.GetSprite(UISpinner.SilverIndicator);
+        SpinText.text = "SILVER SPIN";
+        SpinText.color = Color.gray;
+    }
   
     private void ItemGenerate()
     {
@@ -198,14 +204,12 @@ public class WheelSpinner : MonoBehaviour
                        
                         if (!Itemlist[indexs].Item_isBomb_value)
                         {
-                           
-                           EventBus.Selected?.Invoke(SelectedItem);
-                          
+                            eventBus.Fire(new GameEvents.Selected(SelectedItem));                  
                         }
                         else
                         {
                             Debug.Log("Bomb");
-                            EventBus.Bomb?.Invoke();
+                            eventBus.Fire(new GameEvents.Bomb());
                             Invoke(nameof(ReadySpin), 1);
 
                         }
